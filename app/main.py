@@ -38,10 +38,11 @@ def create_notification():
     """ Create a new notification """
     connection = pika.BlockingConnection(pika.ConnectionParameters(host='rabbitmq'))
     channel = connection.channel()
-    channel.exchange_declare(exchange='topic_logs', exchange_type='topic')
+    channel.exchange_declare(exchange='sms', exchange_type='topic')
+    
     routing_key = "sms"
-    message = 'Hello World!'
-    channel.basic_publish(exchange='topic_logs', routing_key=routing_key, body=message)
+    message = 'Hello World 2!'
+    channel.basic_publish(exchange='sms', routing_key=routing_key, body=message)
     print(f" [x] Sent {routing_key}:{message}")
     connection.close()
     return {"message": f" [x] Sent {routing_key}:{message}"}
