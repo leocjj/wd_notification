@@ -6,9 +6,24 @@ services:
     depends_on:
       - postgres
       - rabbitmq
+    image: notifications_fastapi
+    volumes:
+      - ./app:/code/app
     environment:
       - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
       - RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672
+    entrypoint: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+    
+    
+  notifications:
+    image: notifications_fastapi
+    depends_on:
+      - rabbitmq
+    volumes:
+      - ./app/notifications.py:/code/app/notifications.py
+    working_dir: /code
+    #entrypoint: ["tail", "-f", "/dev/null"]
+    entrypoint: ["python", "app/notifications.py"]
 
   postgres:
     image: postgres:13
@@ -23,9 +38,11 @@ services:
 
   rabbitmq:
     image: rabbitmq:3-management
+    hostname: rabbitmq
     ports:
       - "5672:5672"
       - "15672:15672"
+  
 
 # To start the docker service
 #   sudo service docker start

@@ -1,5 +1,6 @@
-from typing import Union
+from typing import Union, Dict, Any
 from fastapi import FastAPI
+import pika
 import app.db_orm as orm
 
 orm.create_preferences_table()
@@ -31,7 +32,21 @@ def create_preference(user_id: int, email_enabled: bool, sms_enabled: bool):
     result = orm.upsert_preferences(user_id, bool(email_enabled), bool(sms_enabled))
     return {"user_id": user_id, "email_enabled": result.email_enabled, "sms_enabled": result.sms_enabled}
 
-# endpoint to post new notifications
+
 @app.post("/v1/notifications")
 def create_notification():
-    return {"message": "Notification created successfully!"}
+    """ Create a new notification """
+    connection = pika.BlockingConnection(pika.ConnectionParameters(host='rabbitmq'))
+    channel = connection.channel()
+    channel.exchange_declare(exchange='topic_logs', exchange_type='topic')
+    routing_key = "sms"
+    message = 'Hello World!'
+    channel.basic_publish(exchange='topic_logs', routing_key=routing_key, body=message)
+    print(f" [x] Sent {routing_key}:{message}")
+    connection.close()
+    return {"message": f" [x] Sent {routing_key}:{message}"}
+
+
+@app.post('/')
+def main(payload: Dict[Any, Any]):
+    return payload
