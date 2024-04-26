@@ -82,6 +82,10 @@ Project structure:
 
 ```
 
+API endpoints:
+
+![Image](api_endpoints.png)
+
 ## .env file
 
 Database credentials are passed as environment variables to the compose file. This is the recommended way to pass sensitive information like credentials to the application and should
