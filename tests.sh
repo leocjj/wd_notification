@@ -34,6 +34,12 @@ echo "Check the logs above to see if the API is returning the preferences."
 echo ""
 sleep 5
 
+curl http://127.0.0.1:8000/v1/properties/news
+echo ""
+echo "Check the logs above to see if the mocked API is returning the news."
+echo ""
+sleep 5
+
 curl -X 'POST' 'http://127.0.0.1:8000/v1/notifications' -H 'accept: application/json' -d ''
 echo ""
 echo "Check the logs above to see if the API created notifications."

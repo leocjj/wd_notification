@@ -6,6 +6,9 @@ Microservice to send email or sms notifications according with user preferences
 ```shell
 git clone https://github.com/leocjj/wd_notification.git
 cd wd_notification
+echo "POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres
+POSTGRES_DB=postgres " > .env
 chmod +x tests.sh start.sh install_docker.sh
 ./install_docker.sh
 ./start.sh
