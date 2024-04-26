@@ -59,7 +59,7 @@ chmod +x install_docker.sh
 ./install_docker.sh
 ```
 
-### Python/FastAPI application
+## Python/FastAPI application
 
 Project structure:
 ```
@@ -77,7 +77,7 @@ Project structure:
 
 ```
 
-.env file
+## .env file
 
 Database credentials are passed as environment variables to the compose file. This is the recommended way to pass sensitive information like credentials to the application and should
 be created in the same directory as the compose file with the right permissions.
@@ -87,7 +87,7 @@ POSTGRES_PASSWORD=postgres
 POSTGRES_DB=postgres
 ```
 
-[_compose.yaml_](compose.yaml)
+## [_compose.yaml_](compose.yaml)
 
 
 ```yaml
@@ -177,7 +177,7 @@ CONTAINER ID   IMAGE                   COMMAND                  CREATED         
 ```
 
 
-# TESTS
+## TESTS
 
 After the application starts, navigate to each endpoint and you should see the following json responses:
 ```bash
@@ -272,6 +272,7 @@ To access the RabbitMQ management interface, navigate to `http://localhost:15672
 
 ## Project Status
 This project is currently in development. Users can create a user, set preferences and send notifications. But there are still some features to be implemented, such as:
+- [ ] Add real services to send email and sms
 - [ ] Add more tests
 - [ ] Add more type hints
 - [ ] Add linters and formatters
