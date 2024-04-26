@@ -2,6 +2,11 @@
 
 Microservice to send email or sms notifications according with user preferences
 
+## Architecture
+
+![Image](wd_notification.drawio.png)
+
+
 ## tl;dr
 ```shell
 git clone https://github.com/leocjj/wd_notification.git
@@ -252,6 +257,10 @@ $ sudo docker compose logs notifications
 chmod +x tests.sh
 ./tests.sh
 ```
+
+## FastAPI Swagger UI
+
+To access the FastAPI Swagger UI, navigate to `http://localhost:8000/docs` in your web browser.
 
 ## RabbitMQ
 
