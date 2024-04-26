@@ -27,5 +27,12 @@ sudo service docker start
 sudo service docker status
 sudo docker run -it hello-world
 
-echo "If you see a message 'Hello from Docker', that's good! 🥳"
+# Install docker compose
+sudo apt-get update
+sudo apt-get install docker-compose-plugin
+
+# Check the docker compose version
+docker compose version
+
+echo "If you see the docker compose version, that's good! 🥳"
 echo ""

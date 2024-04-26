@@ -43,7 +43,7 @@ sudo update-alternatives --config iptables
 # Start docker service and check the status
 sudo service docker start
 sudo service docker status
-# sudo docker run -it hello-world bash
+sudo docker run -it hello-world
 
 # Check if docker compose is installed
 docker compose version
@@ -54,12 +54,9 @@ sudo apt-get install docker-compose-plugin
 # Check the docker compose version
 docker compose version
 
-# Build the compose.yaml file and run the docker compose in the background
-sudo docker compose up --detach --build
-sudo docker compose config
-
-# To stop the running process
-sudo docker compose down
+# Or just run this bash script
+chmod +x install_docker.sh
+./install_docker.sh
 ```
 
 ### Python/FastAPI application
@@ -68,11 +65,15 @@ Project structure:
 ```
 ├── compose.yaml
 ├── Dockerfile
+├── install_docker.sh
 ├── requirements.txt
+├── start.sh
+├── tests.sh
 ├── app
-    ├── main.py
-    ├── db_orm.py
     ├── __init__.py
+    ├── db_orm.py
+    ├── main.py
+    ├── notifications.py
 
 ```
 
@@ -145,6 +146,8 @@ sudo service docker start
 sudo docker compose up --detach --build
 # To check the running processes
 docker compose ps
+# To check the compose.yaml file
+sudo docker compose config
 # To check the logs of the running process
 sudo docker compose logs fastapi
 # To connect to the running container
