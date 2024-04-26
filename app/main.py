@@ -43,8 +43,6 @@ def create_notification():
     channel = connection.channel()
     channel.exchange_declare(exchange='news', exchange_type='topic')
 
-    #return {"result":str(orm.inner_join_preferences_users())}
-
     # get the users email and phone from the mocked database
     users = orm.inner_join_users_preferences()
 
@@ -52,21 +50,24 @@ def create_notification():
     response = requests.get('http://127.0.0.1:8000/v1/properties/news')
     properties = response.json()['news']
 
+    # send the notifications according to the user preferences
     for user in users:
         if user[0].email_enabled:
-            channel.basic_publish(exchange='news', routing_key=EMAIL, body=properties)
+            temp = properties + [f"{user[1].email}"]
+            channel.basic_publish(exchange='news', routing_key=EMAIL, body=str(temp))
         if user[0].sms_enabled:
-            channel.basic_publish(exchange='news', routing_key=SMS, body=properties)
+            temp = properties + [f"{user[1].phone}"]
+            channel.basic_publish(exchange='news', routing_key=SMS, body=str(temp))
 
     connection.close()
-    return {"Notification created!"}
+    return {"result": "Notifications created!"}
 
 # Mock the external property databases access through APIs
 @app.get('/v1/properties/news')
 def news():
     properties = orm.get_properties()
-    message = ""
+    message = []
     for prop in properties:
-        message += f"Property code: {prop.id}\n{prop.name}\n{str(prop.price)}\n\n"
+        message.append(f"\nProperty code: {prop.id}\n{prop.name}\n{str(prop.price)}\n\n")
 
     return {"news": message}

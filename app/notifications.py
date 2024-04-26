@@ -9,12 +9,20 @@ BINDING_KEYS = [SMS, EMAIL]
 def callback(ch, method, properties, body):
     if method.routing_key == SMS:
         # Mock the SMS sending
-        print(f"[√] SMS sent!", flush=True)
-        print(f"    content: {body.decode('utf-8')}", flush=True)
+        body = body.decode('utf-8').replace("[", "").replace("]", "").replace("'", "")
+        body = body.replace("\\n", "\n").split(", ")
+        phone = body.pop()
+        print(f"[√] SMS sent to: {phone}", flush=True)
+        message = " ".join(body)
+        print(f"    content: {message}", flush=True)
     elif method.routing_key == EMAIL:
         # Mock the email sending
-        print(f"[√] Email sent!", flush=True)
-        print(f"    content: {body.decode('utf-8')}", flush=True)
+        body = body.decode('utf-8').replace("[", "").replace("]", "").replace("'", "")
+        body = body.replace("\\n", "\n").split(", ")
+        email = body.pop()
+        print(f"[√] Email sent to: {email}", flush=True)
+        message = " ".join(body)
+        print(f"    content: {message}", flush=True)
 
 try:
     connection = pika.BlockingConnection(pika.ConnectionParameters(host='rabbitmq'))
