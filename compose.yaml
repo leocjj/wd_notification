@@ -7,23 +7,25 @@ services:
       - postgres
       - rabbitmq
     image: notifications_fastapi
+    restart: on-failure
     volumes:
       - ./app:/code/app
     environment:
       - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
       - RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672
-    entrypoint: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
-    
-    
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+
   notifications:
     image: notifications_fastapi
     depends_on:
       - rabbitmq
+    links: 
+      - rabbitmq
+    restart: on-failure
     volumes:
       - ./app/notifications.py:/code/app/notifications.py
     working_dir: /code
-    #entrypoint: ["tail", "-f", "/dev/null"]
-    entrypoint: ["python", "app/notifications.py"]
+    command: python ./app/notifications.py
 
   postgres:
     image: postgres:13
@@ -42,17 +44,3 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
-  
-
-# To start the docker service
-#   sudo service docker start
-# To check the running processes
-#   docker compose ps
-# To Build the compose.yaml file and run the docker compose in the background
-#   sudo docker compose up --detach --build
-# To stop the running process
-#   sudo docker compose down
-# To check the logs of the running process
-#   sudo docker compose logs -f
-# To connect to the running container
-#   sudo docker compose exec fastapi bash

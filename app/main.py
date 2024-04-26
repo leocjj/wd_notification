@@ -1,9 +1,13 @@
 from typing import Union, Dict, Any
 from fastapi import FastAPI
 import pika
+import requests
 import app.db_orm as orm
 
-orm.create_preferences_table()
+
+SMS = "sms"
+EMAIL = "email"
+
 app = FastAPI()
 
 
@@ -13,8 +17,7 @@ def read_root():
     result = orm.get_preferences_number_of_rows()
     if result is None:
         return {"Notification API status": "Inactive"}
-    # TODO: check if the number of rows is needed
-    return {"Notification API status": f"{result} Active"}
+    return {"Notification API status": f"({result}) Active"}
 
 
 @app.get("/v1/preferences/{user_id}")
@@ -38,16 +41,32 @@ def create_notification():
     """ Create a new notification """
     connection = pika.BlockingConnection(pika.ConnectionParameters(host='rabbitmq'))
     channel = connection.channel()
-    channel.exchange_declare(exchange='sms', exchange_type='topic')
-    
-    routing_key = "sms"
-    message = 'Hello World 2!'
-    channel.basic_publish(exchange='sms', routing_key=routing_key, body=message)
-    print(f" [x] Sent {routing_key}:{message}")
+    channel.exchange_declare(exchange='news', exchange_type='topic')
+
+    #return {"result":str(orm.inner_join_preferences_users())}
+
+    # get the users email and phone from the mocked database
+    users = orm.inner_join_users_preferences()
+
+    # get the new properties from the mocked endpoint /v1/properties/news
+    response = requests.get('http://127.0.0.1:8000/v1/properties/news')
+    properties = response.json()['news']
+
+    for user in users:
+        if user[0].email_enabled:
+            channel.basic_publish(exchange='news', routing_key=EMAIL, body=properties)
+        if user[0].sms_enabled:
+            channel.basic_publish(exchange='news', routing_key=SMS, body=properties)
+
     connection.close()
-    return {"message": f" [x] Sent {routing_key}:{message}"}
+    return {"Notification created!"}
 
+# Mock the external property databases access through APIs
+@app.get('/v1/properties/news')
+def news():
+    properties = orm.get_properties()
+    message = ""
+    for prop in properties:
+        message += f"Property code: {prop.id}\n{prop.name}\n{str(prop.price)}\n\n"
 
-@app.post('/')
-def main(payload: Dict[Any, Any]):
-    return payload
+    return {"news": message}
