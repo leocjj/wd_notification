@@ -269,6 +269,24 @@ To access the RabbitMQ management interface, navigate to `http://localhost:15672
 
 [Docker](https://www.docker.com/)
 
+
+## Project Status
+This project is currently in development. Users can create a user, set preferences and send notifications. But there are still some features to be implemented, such as:
+- [ ] Add more tests
+- [ ] Add more type hints
+- [ ] Add linters and formatters
+- [ ] Add more error handling
+- [ ] Add a permanent logging
+- [ ] Check security risks
+- [ ] Add stress tests
+- [ ] Add more endpoints
+- [ ] Store the secrets in a secure way
+- [ ] Add a CI/CD pipeline
+- [ ] Add a monitoring system
+- [ ] Add a configuration file
+- [ ] Add a permanent volume for the database
+
+
 ## Contact
 Created by [LeonardoCJ](https://www.linkedin.com/in/leonardocj/) - feel free to contact me!
 
