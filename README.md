@@ -20,7 +20,7 @@ chmod +x tests.sh start.sh install_docker.sh
 ./tests.sh
 ```
 
-## Install with Docker Compose
+## Install Docker Compose
 
 Follow the steps below to install Docker and Docker Compose ([Official page](https://docs.docker.com/engine/install/ubuntu/)):
 ```shell
